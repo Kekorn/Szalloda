@@ -43,7 +43,7 @@ def szinez(string: str, szin: int):
 
 class Szoba(ABC):
     AGYAK_SZAMA = 1
-    ALAP_FELSZERELTSEG = "Ágy, asztal,TV"
+    ALAP_FELSZERELTSEG = "Ágy, asztal, TV"
 
     def __init__(self, szobaszam: str, ar: int = 8700, felszereltseg: str = None):
         self.szobaszam = szobaszam
@@ -176,7 +176,7 @@ def main():
     KiserHotel.foglalast_rogzit(Foglalas("E1", "2028-01-01"))
     KiserHotel.foglalast_rogzit(Foglalas("K2", "2025-11-01"))
 
-    def mintak():
+    def teszt_esetek():
         KiserHotel.foglalast_rogzit(Foglalas("E1", "2025-01-01"))
         KiserHotel.foglalast_rogzit(Foglalas("K1", "2029-01-01"))
         KiserHotel.foglalast_rogzit(Foglalas("K1", "2025-01-01"))
