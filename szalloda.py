@@ -1,22 +1,21 @@
+import os
 from abc import ABC
 from datetime import *
-import os
-import time
 
 os.system("color")
 
 
 def szinez(string: str, szin: int):
-    FEHER = "\033[0m"  # alapértelmezett szín
-    PIROS = "\033[31m"  # figyelmeztetés színe
-    ZOLD = "\033[32m"  # nyugtázás
-    SARGA = "\033[33m"  # menü színe
+    feher = "\033[0m"  # alapértelmezett szín
+    piros = "\033[31m"  # figyelmeztetés színe
+    zold = "\033[32m"  # nyugtázás
+    sarga = "\033[33m"  # menü színe
     if szin == 1:
-        return PIROS + string + FEHER
+        return piros + string + feher
     elif szin == 2:
-        return ZOLD + string + FEHER
+        return zold + string + feher
     else:
-        return SARGA + string + FEHER
+        return sarga + string + feher
 
 
 # Osztályok Létrehozása
@@ -109,8 +108,12 @@ class Szalloda:
                     print(szinez("Erre a dátumra már van foglalás a szobára!", 1))
             if Foglalas.datum <= datetime.today().date():
                 print(szinez("Érvénytelen foglalás! Csak jövőbeli időpontra lehet foglalni!", 1))
+        elif Foglalas.ar and not Foglalas.datum:
+            print(szinez("Érvénytelen foglalás! Hibás dátum!", 1))
+        elif not Foglalas.ar and Foglalas.datum:
+            print(szinez("Érvénytelen foglalás! Hibás szobaszám!", 1))
         else:
-            print(szinez("Érvénytelen foglalás!", 1))
+            print(szinez("Érvénytelen foglalás! Hibás dátum és szobaszám!", 1))
 
     def foglalast_listaz(self):
         for foglalas in self.foglalasok:
@@ -132,7 +135,7 @@ class Foglalas:
         try:
             self.datum = datetime.strptime(datum, "%Y-%m-%d").date()
         except ValueError:
-            print(szinez("Érvényes dátumot kérek!", 1))
+            print(szinez("Foglalas -> Érvénytelen dátum!", 1))
             self.datum = None
 
         self._ar = ar
@@ -184,6 +187,8 @@ def main():
         KiserHotel.foglalast_rogzit(Foglalas("E1", "2029-01-01"))
         KiserHotel.foglalast_rogzit(Foglalas("E1", "2028-01-01"))
         KiserHotel.foglalast_rogzit(Foglalas("P1", "2025-01-01"))
+        KiserHotel.foglalast_rogzit(Foglalas("P1", "2025-xx/xx"))
+        KiserHotel.foglalast_rogzit(Foglalas("E1", "2028xdafg"))
         KiserHotel.foglalast_rogzit(Foglalas("K1", "2024-01-01"))
         KiserHotel.foglalast_rogzit(Foglalas("E1", "2023-01-01"))
         KiserHotel.foglalast_rogzit(Foglalas("K1", "2023-01-01"))
@@ -198,6 +203,7 @@ def main():
                    "\t3) Foglalások listája\n"
                    "\t4) Foglalást rögzít\n"
                    "\t5) Foglalást töröl\n"
+                   "\t6) Foglalási tesztek\n"
                    "\t0) Kilépés\n", 3) +
             "Választás:")
 
@@ -207,6 +213,7 @@ def main():
                           "3) Foglalások listája "
                           "4) Foglalást rögzít "
                           "5) Foglalást töröl "
+                          "6) Foglalási tesztek "
                           "0) Kilépés\n", 3) +
                    "Választás:")
 
@@ -230,8 +237,10 @@ def main():
             print("Foglalás törlése:")
             KiserHotel.foglalast_torol(
                 Foglalas(input("Kérem a szobaszámot:"), input("Kérem az időpontot (éééé-hh-nn):")))
+        elif valasztas == "6":
+            teszt_esetek()
         else:
-            print(szinez("\nKérem adjon meg érvényes értéket (0-5)", 1))
+            print(szinez("\nKérem adjon meg érvényes értéket (0-6)", 1))
         valasztas = input(menu_egysor)
 
 
